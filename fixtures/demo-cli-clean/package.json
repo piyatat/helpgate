@@ -1,0 +1,13 @@
+{
+  "name": "demo-cli-clean",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "demo-cli-clean": "./bin/demo.js"
+  },
+  "scripts": {
+    "start": "node bin/demo.js",
+    "check": "node bin/demo.js --help"
+  }
+}

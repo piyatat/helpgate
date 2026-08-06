@@ -1,0 +1,38 @@
+{
+  "name": "helpgate",
+  "version": "0.1.0",
+  "description": "Assert README / docs flags match live --help (and package scripts) before release",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "helpgate": "./bin/helpgate.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "helpgate": "node bin/helpgate.js",
+    "test:fixtures": "npm run build && node scripts/test-fixtures.js"
+  },
+  "keywords": [
+    "cli",
+    "readme",
+    "help",
+    "docs",
+    "drift",
+    "flags"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "typescript": "^5.8.2"
+  }
+}

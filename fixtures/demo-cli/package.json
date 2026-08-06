@@ -1,0 +1,13 @@
+{
+  "name": "demo-cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "demo-cli": "./bin/demo.js"
+  },
+  "scripts": {
+    "start": "node bin/demo.js",
+    "build": "echo ok"
+  }
+}
