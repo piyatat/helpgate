@@ -10,10 +10,11 @@ export function printOwnHelp(): void {
   console.log(`helpgate — assert README flags match live --help
 
 Usage:
-  helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
+  helpgate [--bin path] [--help-cmd arg…] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
 
 Options:
   --bin <path>       Executable to run with --help (default: resolve from package.json bin)
+  --help-cmd <arg>   Args for help invocation (repeatable; default: --help). Example: --help-cmd -h
   --readme <path>    README to scan (default: README.md)
   --cwd <dir>        Working directory for package / README resolution (default: .)
   --allow <flag>     Ignore a flag in drift checks (repeatable; bare name ok)
@@ -43,6 +44,7 @@ export function normalizeAllowFlag(raw: string): string | undefined {
 
 export function parseArgs(argv: string[]): ParseArgsResult {
   const options: CliOptions = {
+    helpCmd: ["--help"],
     readme: "README.md",
     cwd: process.cwd(),
     allow: [],
@@ -90,6 +92,20 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     }
     if (arg === "--exit-zero") {
       options.exitZero = true;
+      continue;
+    }
+    if (arg === "--help-cmd") {
+      const value = argv[++i];
+      if (!value || value.startsWith("-")) {
+        return { options, error: `Missing value for ${arg}` };
+      }
+      options.helpCmd.push(value);
+      continue;
+    }
+    if (arg.startsWith("--help-cmd=")) {
+      const value = arg.slice("--help-cmd=".length);
+      if (!value) return { options, error: `Missing value for --help-cmd` };
+      options.helpCmd.push(value);
       continue;
     }
     if (arg === "--allow") {

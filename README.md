@@ -17,12 +17,13 @@ Requires **Node.js >= 18**. Zero runtime dependencies.
 ## Usage
 
 ```bash
-helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
+helpgate [--bin path] [--help-cmd arg…] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
 ```
 
 | Flag | Description |
 | --- | --- |
 | `--bin <path>` | Executable to invoke with `--help` (default: `package.json` `bin`) |
+| `--help-cmd <arg>` | Args for help invocation (repeatable; default: `--help`). Use for CLIs that only expose `-h` |
 | `--readme <path>` | Markdown to scan (default: `README.md`) |
 | `--cwd <dir>` | Resolve package / README relative to this directory (default: `.`) |
 | `--allow <flag>` | Ignore a flag in drift checks (repeatable; bare names are accepted) |

@@ -170,7 +170,7 @@ export async function run(argv: string[]): Promise<number> {
     return 1;
   }
 
-  const helpResult = runHelp(binRel, cwd);
+  const helpResult = runHelp(binRel, cwd, options.helpCmd);
   if (helpResult.error) {
     console.error(`helpgate: ${helpResult.error}`);
     return 1;

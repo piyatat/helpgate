@@ -58,20 +58,25 @@ function isNodeScript(filePath: string): boolean {
   }
 }
 
-export function runHelp(binPath: string, cwd: string): { text: string; error?: string } {
+export function runHelp(
+  binPath: string,
+  cwd: string,
+  helpCmd: string[] = ["--help"],
+): { text: string; error?: string } {
   const resolved = path.isAbsolute(binPath) ? binPath : path.resolve(cwd, binPath);
   if (!fs.existsSync(resolved)) {
     return { text: "", error: `Binary not found: ${resolved}` };
   }
 
+  const cmd = helpCmd.length ? helpCmd : ["--help"];
   const result = isNodeScript(resolved)
-    ? spawnSync(process.execPath, [resolved, "--help"], {
+    ? spawnSync(process.execPath, [resolved, ...cmd], {
         cwd,
         encoding: "utf8",
         env: { ...process.env, NO_COLOR: "1", FORCE_COLOR: "0" },
         timeout: 15_000,
       })
-    : spawnSync(resolved, ["--help"], {
+    : spawnSync(resolved, cmd, {
         cwd,
         encoding: "utf8",
         env: { ...process.env, NO_COLOR: "1", FORCE_COLOR: "0" },
@@ -82,12 +87,15 @@ export function runHelp(binPath: string, cwd: string): { text: string; error?: s
   const text = `${result.stdout ?? ""}${result.stderr ?? ""}`;
 
   if (!text.trim() && result.error) {
-    return { text: "", error: `Failed to run ${resolved} --help: ${result.error.message}` };
+    return {
+      text: "",
+      error: `Failed to run ${resolved} ${cmd.join(" ")}: ${result.error.message}`,
+    };
   }
   if (!text.trim()) {
     return {
       text: "",
-      error: `No --help output from ${resolved} (exit ${result.status ?? "?"})`,
+      error: `No help output from ${resolved} ${cmd.join(" ")} (exit ${result.status ?? "?"})`,
     };
   }
 

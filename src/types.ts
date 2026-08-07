@@ -2,6 +2,8 @@
 
 export interface CliOptions {
   bin?: string;
+  /** Extra args appended when invoking bin for help (default: `--help`). */
+  helpCmd: string[];
   readme: string;
   cwd: string;
   /** Flags excluded from drift (repeatable `--allow`). */
