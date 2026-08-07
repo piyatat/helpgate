@@ -17,7 +17,7 @@ Requires **Node.js >= 18**. Zero runtime dependencies.
 ## Usage
 
 ```bash
-helpgate [--bin path] [--readme path] [--cwd dir] [--json]
+helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--json]
 ```
 
 | Flag | Description |
@@ -25,6 +25,7 @@ helpgate [--bin path] [--readme path] [--cwd dir] [--json]
 | `--bin <path>` | Executable to invoke with `--help` (default: `package.json` `bin`) |
 | `--readme <path>` | Markdown to scan (default: `README.md`) |
 | `--cwd <dir>` | Resolve package / README relative to this directory (default: `.`) |
+| `--allow <flag>` | Ignore a flag in drift checks (repeatable; bare names are accepted) |
 | `--json` | Print a machine-readable report |
 | `--help` | Show help |
 | `--version` | Print version |
@@ -42,6 +43,7 @@ helpgate [--bin path] [--readme path] [--cwd dir] [--json]
 2. Scans the README for the same flag tokens.
 3. Reports **missing in help** (docs-only) and **missing in README** (undocumented CLI flags).
 4. Soft-warns when README mentions `npm run <script>` (etc.) that is not in `package.json` `scripts`.
+5. Honors repeatable `--allow` so intentional internal or transitional flags do not fail CI.
 
 Short/long aliases (for example help / version) are treated as matching.
 
@@ -58,6 +60,12 @@ npx helpgate --cwd fixtures/demo-cli-clean
 
 # JSON for CI
 npx helpgate --cwd fixtures/demo-cli --json
+
+# Allow known drift (docs-only / undocumented) → exit 0
+npx helpgate --cwd fixtures/demo-cli \
+  --allow debug --allow format \
+  --allow output --allow quiet \
+  --allow help --allow version
 ```
 
 Wire into release:

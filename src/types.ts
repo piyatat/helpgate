@@ -4,6 +4,8 @@ export interface CliOptions {
   bin?: string;
   readme: string;
   cwd: string;
+  /** Flags excluded from drift (repeatable `--allow`). */
+  allow: string[];
   json: boolean;
   help: boolean;
   version: boolean;
@@ -34,6 +36,8 @@ export interface DriftReport {
   missingInHelp: string[];
   /** In --help but not mentioned in README. */
   missingInReadme: string[];
+  /** Flags that were allowed and therefore omitted from missing* lists. */
+  allowed: string[];
   scripts: ScriptCheck | null;
   warnings: string[];
 }

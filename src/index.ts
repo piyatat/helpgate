@@ -17,10 +17,29 @@ export function buildReport(opts: {
   readmePath: string;
   helpText: string;
   readmeText: string;
+  allow?: string[];
 }): DriftReport {
   const help = extractFlagsFromHelp(opts.helpText);
   const readme = extractFlagsFromReadme(opts.readmeText);
-  const { missingInHelp, missingInReadme } = diffFlags(help.flags, readme.flags);
+  const diff = diffFlags(help.flags, readme.flags);
+  const allow = new Set(opts.allow ?? []);
+  const allowedUsed = new Set<string>();
+
+  const missingInHelp = diff.missingInHelp.filter((f) => {
+    if (allow.has(f)) {
+      allowedUsed.add(f);
+      return false;
+    }
+    return true;
+  });
+  const missingInReadme = diff.missingInReadme.filter((f) => {
+    if (allow.has(f)) {
+      allowedUsed.add(f);
+      return false;
+    }
+    return true;
+  });
+
   const scripts = checkScripts(opts.readmeText, opts.cwd);
   const warnings: string[] = [];
 
@@ -41,6 +60,7 @@ export function buildReport(opts: {
     readmeFlags: [...readme.flags].sort(),
     missingInHelp,
     missingInReadme,
+    allowed: [...allowedUsed].sort(),
     scripts,
     warnings,
   };
@@ -60,6 +80,11 @@ function printHuman(report: DriftReport): void {
   if (report.missingInReadme.length > 0) {
     console.log("\n✗ In --help but missing from README:");
     for (const f of report.missingInReadme) console.log(`    ${f}`);
+  }
+
+  if (report.allowed.length > 0) {
+    console.log("\n○ Allowed (ignored):");
+    for (const f of report.allowed) console.log(`    ${f}`);
   }
 
   if (report.warnings.length > 0) {
@@ -130,6 +155,7 @@ export async function run(argv: string[]): Promise<number> {
     readmePath,
     helpText: helpResult.text,
     readmeText,
+    allow: options.allow,
   });
 
   if (options.json) {
