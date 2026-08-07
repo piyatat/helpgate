@@ -16,6 +16,8 @@ export interface CliOptions {
   exitZero: boolean;
   /** Skip README script cross-check; flags-only mode. */
   noScripts: boolean;
+  /** Auto-ignore --help, --version, -h, -V in drift checks. */
+  ignoreMeta: boolean;
   json: boolean;
   /** One-line status for CI logs (implies --quiet on success). */
   summary: boolean;

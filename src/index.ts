@@ -11,6 +11,9 @@ export { extractFlagsFromHelp } from "./help.js";
 export { extractFlagsFromReadme, diffFlags } from "./readme.js";
 export { checkScripts, extractScriptMentions } from "./scripts.js";
 
+/** Common CLI meta flags that docs often omit or alias differently. */
+export const META_FLAGS = ["--help", "--version", "-h", "-V"] as const;
+
 export function buildReport(opts: {
   cwd: string;
   bin: string;
@@ -20,11 +23,13 @@ export function buildReport(opts: {
   allow?: string[];
   strictScripts?: boolean;
   noScripts?: boolean;
+  ignoreMeta?: boolean;
 }): DriftReport {
   const help = extractFlagsFromHelp(opts.helpText);
   const readme = extractFlagsFromReadme(opts.readmeText);
   const diff = diffFlags(help.flags, readme.flags);
   const allow = new Set(opts.allow ?? []);
+  for (const f of opts.ignoreMeta ? META_FLAGS : []) allow.add(f);
   const allowedUsed = new Set<string>();
 
   const missingInHelp = diff.missingInHelp.filter((f) => {
@@ -186,6 +191,7 @@ export async function run(argv: string[]): Promise<number> {
     allow: options.allow,
     strictScripts: options.strictScripts,
     noScripts: options.noScripts,
+    ignoreMeta: options.ignoreMeta,
   });
 
   if (options.json) {

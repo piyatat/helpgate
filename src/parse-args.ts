@@ -10,7 +10,7 @@ export function printOwnHelp(): void {
   console.log(`helpgate — assert README flags match live --help
 
 Usage:
-  helpgate [--bin path] [--help-cmd arg…] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
+  helpgate [--bin path] [--help-cmd arg…] [--readme path] [--cwd dir] [--allow flag] [--ignore-meta] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
 
 Options:
   --bin <path>       Executable to run with --help (default: resolve from package.json bin)
@@ -18,6 +18,7 @@ Options:
   --readme <path>    README to scan (default: README.md)
   --cwd <dir>        Working directory for package / README resolution (default: .)
   --allow <flag>     Ignore a flag in drift checks (repeatable; bare name ok)
+  --ignore-meta      Auto-ignore --help, --version, -h, -V (common boilerplate)
   --strict-scripts   Fail when README mentions scripts missing from package.json
   --no-scripts       Skip README script cross-check (flags-only mode)
   -q, --quiet        Silent on success; print only when drift / failure
@@ -50,6 +51,7 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     allow: [],
     strictScripts: false,
     noScripts: false,
+    ignoreMeta: false,
     quiet: false,
     exitZero: false,
     json: false,
@@ -80,6 +82,10 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     }
     if (arg === "--no-scripts") {
       options.noScripts = true;
+      continue;
+    }
+    if (arg === "--ignore-meta") {
+      options.ignoreMeta = true;
       continue;
     }
     if (arg === "-q" || arg === "--quiet") {

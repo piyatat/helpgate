@@ -126,4 +126,29 @@ if (!summaryDrift.stdout.includes("DRIFT") || !summaryDrift.stdout.includes("mis
 }
 console.log("✓ fixtures/demo-cli --summary prints one-line DRIFT");
 
+const ignoreMeta = run([
+  "--cwd",
+  "fixtures/demo-cli",
+  "--ignore-meta",
+  "--allow",
+  "--debug",
+  "--allow",
+  "--format",
+  "--allow",
+  "--output",
+  "--allow",
+  "--quiet",
+]);
+if (ignoreMeta.status !== 0) {
+  console.error("Expected --ignore-meta + allows to exit 0, got", ignoreMeta.status);
+  console.error(ignoreMeta.stdout);
+  process.exit(1);
+}
+if (!ignoreMeta.stdout.includes("Allowed") || !ignoreMeta.stdout.includes("--help")) {
+  console.error("Expected --ignore-meta to list meta flags as allowed");
+  console.error(ignoreMeta.stdout);
+  process.exit(1);
+}
+console.log("✓ fixtures/demo-cli --ignore-meta skips meta flag drift");
+
 console.log("All fixture checks passed.");
