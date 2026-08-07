@@ -17,7 +17,7 @@ Requires **Node.js >= 18**. Zero runtime dependencies.
 ## Usage
 
 ```bash
-helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--json]
+helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--json]
 ```
 
 | Flag | Description |
@@ -26,6 +26,7 @@ helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--json]
 | `--readme <path>` | Markdown to scan (default: `README.md`) |
 | `--cwd <dir>` | Resolve package / README relative to this directory (default: `.`) |
 | `--allow <flag>` | Ignore a flag in drift checks (repeatable; bare names are accepted) |
+| `--strict-scripts` | Fail when README mentions `npm run` scripts missing from `package.json` |
 | `--json` | Print a machine-readable report |
 | `--help` | Show help |
 | `--version` | Print version |
@@ -34,15 +35,15 @@ helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--json]
 
 | Code | Meaning |
 | --- | --- |
-| `0` | Flags aligned (script mismatches are warnings only) |
-| `1` | Flag drift, or a fatal error (missing bin / README / help output) |
+| `0` | Flags aligned (script mismatches are warnings unless `--strict-scripts`) |
+| `1` | Flag drift, strict script mismatch, or a fatal error (missing bin / README / help output) |
 
 ### What it checks
 
 1. Runs `<bin>` with help, extracts long and short option names.
 2. Scans the README for the same flag tokens.
 3. Reports **missing in help** (docs-only) and **missing in README** (undocumented CLI flags).
-4. Soft-warns when README mentions `npm run <script>` (etc.) that is not in `package.json` `scripts`.
+4. Soft-warns when README mentions `npm run <script>` (etc.) that is not in `package.json` `scripts` (use `--strict-scripts` to fail instead).
 5. Honors repeatable `--allow` so intentional internal or transitional flags do not fail CI.
 
 Short/long aliases (for example help / version) are treated as matching.

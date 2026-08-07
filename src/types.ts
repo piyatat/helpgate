@@ -6,6 +6,8 @@ export interface CliOptions {
   cwd: string;
   /** Flags excluded from drift (repeatable `--allow`). */
   allow: string[];
+  /** When true, package-script mismatches fail the gate (not warnings). */
+  strictScripts: boolean;
   json: boolean;
   help: boolean;
   version: boolean;

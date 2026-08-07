@@ -18,6 +18,7 @@ export function buildReport(opts: {
   helpText: string;
   readmeText: string;
   allow?: string[];
+  strictScripts?: boolean;
 }): DriftReport {
   const help = extractFlagsFromHelp(opts.helpText);
   const readme = extractFlagsFromReadme(opts.readmeText);
@@ -49,7 +50,9 @@ export function buildReport(opts: {
     }
   }
 
-  const ok = missingInHelp.length === 0 && missingInReadme.length === 0;
+  const scriptFail = Boolean(opts.strictScripts && warnings.length > 0);
+  const ok =
+    missingInHelp.length === 0 && missingInReadme.length === 0 && !scriptFail;
 
   return {
     ok,
@@ -88,12 +91,21 @@ function printHuman(report: DriftReport): void {
   }
 
   if (report.warnings.length > 0) {
-    console.log("\n⚠ Script warnings (non-fatal):");
+    const label = report.ok
+      ? "\n⚠ Script warnings (non-fatal):"
+      : "\n✗ Script mismatches:";
+    console.log(label);
     for (const w of report.warnings) console.log(`    ${w}`);
   }
 
   if (report.ok) {
     console.log(report.warnings.length > 0 ? "\n✓ Flags aligned (with warnings)" : "\n✓ Flags aligned");
+  } else if (
+    report.missingInHelp.length === 0 &&
+    report.missingInReadme.length === 0 &&
+    report.warnings.length > 0
+  ) {
+    console.log("\n✗ Strict script check failed");
   } else {
     console.log("\n✗ Drift detected");
   }
@@ -156,6 +168,7 @@ export async function run(argv: string[]): Promise<number> {
     helpText: helpResult.text,
     readmeText,
     allow: options.allow,
+    strictScripts: options.strictScripts,
   });
 
   if (options.json) {
