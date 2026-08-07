@@ -17,7 +17,7 @@ Requires **Node.js >= 18**. Zero runtime dependencies.
 ## Usage
 
 ```bash
-helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--no-scripts] [--quiet] [--exit-zero] [--json]
+helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
 ```
 
 | Flag | Description |
@@ -29,6 +29,7 @@ helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scrip
 | `--strict-scripts` | Fail when README mentions `npm run` scripts missing from `package.json` |
 | `--no-scripts` | Skip README script cross-check (flags-only mode) |
 | `-q`, `--quiet` | Silent on success; print only when drift / failure (human mode) |
+| `--summary` | One-line status for CI logs (`helpgate: OK …` or `helpgate: DRIFT …`) |
 | `--exit-zero` | Always exit 0 after a successful run (report still shows drift — advisory CI) |
 | `--json` | Print a machine-readable report |
 | `--help` | Show help |

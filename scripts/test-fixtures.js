@@ -104,4 +104,26 @@ if (noScriptsReport.warnings.length > 0) {
 }
 console.log("✓ fixtures/demo-cli --no-scripts skips script checks");
 
+const summaryOk = run(["--cwd", "fixtures/demo-cli-clean", "--summary"]);
+if (summaryOk.status !== 0) {
+  console.error("Expected --summary clean fixture to exit 0, got", summaryOk.status);
+  process.exit(1);
+}
+if (!summaryOk.stdout.trim().startsWith("helpgate: OK")) {
+  console.error("Expected --summary OK line, got", summaryOk.stdout);
+  process.exit(1);
+}
+console.log("✓ fixtures/demo-cli-clean --summary prints one-line OK");
+
+const summaryDrift = run(["--cwd", "fixtures/demo-cli", "--summary"]);
+if (summaryDrift.status !== 1) {
+  console.error("Expected --summary drift fixture to exit 1, got", summaryDrift.status);
+  process.exit(1);
+}
+if (!summaryDrift.stdout.includes("DRIFT") || !summaryDrift.stdout.includes("missing_in_help")) {
+  console.error("Expected --summary DRIFT line, got", summaryDrift.stdout);
+  process.exit(1);
+}
+console.log("✓ fixtures/demo-cli --summary prints one-line DRIFT");
+
 console.log("All fixture checks passed.");

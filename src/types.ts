@@ -15,6 +15,8 @@ export interface CliOptions {
   /** Skip README script cross-check; flags-only mode. */
   noScripts: boolean;
   json: boolean;
+  /** One-line status for CI logs (implies --quiet on success). */
+  summary: boolean;
   help: boolean;
   version: boolean;
 }

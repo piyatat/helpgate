@@ -10,7 +10,7 @@ export function printOwnHelp(): void {
   console.log(`helpgate — assert README flags match live --help
 
 Usage:
-  helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--no-scripts] [--quiet] [--exit-zero] [--json]
+  helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
 
 Options:
   --bin <path>       Executable to run with --help (default: resolve from package.json bin)
@@ -20,6 +20,7 @@ Options:
   --strict-scripts   Fail when README mentions scripts missing from package.json
   --no-scripts       Skip README script cross-check (flags-only mode)
   -q, --quiet        Silent on success; print only when drift / failure
+  --summary          One-line status for CI logs (silent on success unless drift)
   --exit-zero        Always exit 0 after a successful run (report still shows drift)
   --json             Print machine-readable JSON report
   -h, --help         Show this help
@@ -50,6 +51,7 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     quiet: false,
     exitZero: false,
     json: false,
+    summary: false,
     help: false,
     version: false,
   };
@@ -80,6 +82,10 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     }
     if (arg === "-q" || arg === "--quiet") {
       options.quiet = true;
+      continue;
+    }
+    if (arg === "--summary") {
+      options.summary = true;
       continue;
     }
     if (arg === "--exit-zero") {

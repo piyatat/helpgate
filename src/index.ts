@@ -70,6 +70,21 @@ export function buildReport(opts: {
   };
 }
 
+function printSummary(report: DriftReport): void {
+  const parts: string[] = [];
+  if (report.ok) {
+    parts.push("OK");
+  } else {
+    parts.push("DRIFT");
+    if (report.missingInHelp.length) parts.push(`missing_in_help=${report.missingInHelp.length}`);
+    if (report.missingInReadme.length) parts.push(`missing_in_readme=${report.missingInReadme.length}`);
+    if (!report.ok && report.warnings.length) parts.push(`script_warnings=${report.warnings.length}`);
+  }
+  console.log(
+    `helpgate: ${parts.join(" ")} bin=${report.bin} help_flags=${report.helpFlags.length} readme_flags=${report.readmeFlags.length}`,
+  );
+}
+
 function printHuman(report: DriftReport): void {
   console.log(`helpgate  bin=${report.bin}  readme=${report.readme}`);
   console.log(`  help flags   (${report.helpFlags.length}): ${report.helpFlags.join(" ") || "(none)"}`);
@@ -176,6 +191,8 @@ export async function run(argv: string[]): Promise<number> {
   if (options.json) {
     // JSON always emits (CI parsers); --quiet only suppresses human success chatter.
     console.log(JSON.stringify(report, null, 2));
+  } else if (options.summary) {
+    if (!report.ok || !options.quiet) printSummary(report);
   } else if (!options.quiet || !report.ok) {
     printHuman(report);
   }
