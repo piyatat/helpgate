@@ -10,7 +10,7 @@ export function printOwnHelp(): void {
   console.log(`helpgate — assert README flags match live --help
 
 Usage:
-  helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--json]
+  helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--quiet] [--json]
 
 Options:
   --bin <path>       Executable to run with --help (default: resolve from package.json bin)
@@ -18,6 +18,7 @@ Options:
   --cwd <dir>        Working directory for package / README resolution (default: .)
   --allow <flag>     Ignore a flag in drift checks (repeatable; bare name ok)
   --strict-scripts   Fail when README mentions scripts missing from package.json
+  -q, --quiet        Silent on success; print only when drift / failure
   --json             Print machine-readable JSON report
   -h, --help         Show this help
   -V, --version      Print version
@@ -43,6 +44,7 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     cwd: process.cwd(),
     allow: [],
     strictScripts: false,
+    quiet: false,
     json: false,
     help: false,
     version: false,
@@ -66,6 +68,10 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     }
     if (arg === "--strict-scripts") {
       options.strictScripts = true;
+      continue;
+    }
+    if (arg === "-q" || arg === "--quiet") {
+      options.quiet = true;
       continue;
     }
     if (arg === "--allow") {

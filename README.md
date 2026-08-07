@@ -17,7 +17,7 @@ Requires **Node.js >= 18**. Zero runtime dependencies.
 ## Usage
 
 ```bash
-helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--json]
+helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--quiet] [--json]
 ```
 
 | Flag | Description |
@@ -27,6 +27,7 @@ helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scrip
 | `--cwd <dir>` | Resolve package / README relative to this directory (default: `.`) |
 | `--allow <flag>` | Ignore a flag in drift checks (repeatable; bare names are accepted) |
 | `--strict-scripts` | Fail when README mentions `npm run` scripts missing from `package.json` |
+| `-q`, `--quiet` | Silent on success; print only when drift / failure (human mode) |
 | `--json` | Print a machine-readable report |
 | `--help` | Show help |
 | `--version` | Print version |

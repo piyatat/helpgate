@@ -172,8 +172,9 @@ export async function run(argv: string[]): Promise<number> {
   });
 
   if (options.json) {
+    // JSON always emits (CI parsers); --quiet only suppresses human success chatter.
     console.log(JSON.stringify(report, null, 2));
-  } else {
+  } else if (!options.quiet || !report.ok) {
     printHuman(report);
   }
 

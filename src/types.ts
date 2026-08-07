@@ -8,6 +8,8 @@ export interface CliOptions {
   allow: string[];
   /** When true, package-script mismatches fail the gate (not warnings). */
   strictScripts: boolean;
+  /** Silent on success; only print when drift / failure. */
+  quiet: boolean;
   json: boolean;
   help: boolean;
   version: boolean;
