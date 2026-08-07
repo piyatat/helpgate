@@ -178,5 +178,6 @@ export async function run(argv: string[]): Promise<number> {
     printHuman(report);
   }
 
+  if (options.exitZero) return 0;
   return report.ok ? 0 : 1;
 }

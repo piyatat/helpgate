@@ -21,6 +21,20 @@ if (drift.status !== 1) {
 }
 console.log("✓ fixtures/demo-cli exits 1 (drift)");
 
+const advisory = run(["--cwd", "fixtures/demo-cli", "--exit-zero"]);
+if (advisory.status !== 0) {
+  console.error("Expected --exit-zero drift fixture to exit 0, got", advisory.status);
+  console.error(advisory.stdout);
+  console.error(advisory.stderr);
+  process.exit(1);
+}
+if (!advisory.stdout.includes("Drift detected") && !advisory.stdout.includes("missing")) {
+  console.error("Expected --exit-zero to still print drift report");
+  console.error(advisory.stdout);
+  process.exit(1);
+}
+console.log("✓ fixtures/demo-cli --exit-zero exits 0 (advisory)");
+
 const clean = run(["--cwd", "fixtures/demo-cli-clean"]);
 if (clean.status !== 0) {
   console.error("Expected clean fixture to exit 0, got", clean.status);

@@ -10,7 +10,7 @@ export function printOwnHelp(): void {
   console.log(`helpgate — assert README flags match live --help
 
 Usage:
-  helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--quiet] [--json]
+  helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--quiet] [--exit-zero] [--json]
 
 Options:
   --bin <path>       Executable to run with --help (default: resolve from package.json bin)
@@ -19,12 +19,13 @@ Options:
   --allow <flag>     Ignore a flag in drift checks (repeatable; bare name ok)
   --strict-scripts   Fail when README mentions scripts missing from package.json
   -q, --quiet        Silent on success; print only when drift / failure
+  --exit-zero        Always exit 0 after a successful run (report still shows drift)
   --json             Print machine-readable JSON report
   -h, --help         Show this help
   -V, --version      Print version
 
 Exit codes:
-  0  Flags aligned (script mismatches are warnings unless --strict-scripts)
+  0  Flags aligned (script mismatches are warnings unless --strict-scripts), or --exit-zero
   1  Flag drift detected, strict script mismatch, or fatal error
 `);
 }
@@ -45,6 +46,7 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     allow: [],
     strictScripts: false,
     quiet: false,
+    exitZero: false,
     json: false,
     help: false,
     version: false,
@@ -72,6 +74,10 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     }
     if (arg === "-q" || arg === "--quiet") {
       options.quiet = true;
+      continue;
+    }
+    if (arg === "--exit-zero") {
+      options.exitZero = true;
       continue;
     }
     if (arg === "--allow") {

@@ -17,7 +17,7 @@ Requires **Node.js >= 18**. Zero runtime dependencies.
 ## Usage
 
 ```bash
-helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--quiet] [--json]
+helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scripts] [--quiet] [--exit-zero] [--json]
 ```
 
 | Flag | Description |
@@ -28,6 +28,7 @@ helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scrip
 | `--allow <flag>` | Ignore a flag in drift checks (repeatable; bare names are accepted) |
 | `--strict-scripts` | Fail when README mentions `npm run` scripts missing from `package.json` |
 | `-q`, `--quiet` | Silent on success; print only when drift / failure (human mode) |
+| `--exit-zero` | Always exit 0 after a successful run (report still shows drift — advisory CI) |
 | `--json` | Print a machine-readable report |
 | `--help` | Show help |
 | `--version` | Print version |
@@ -36,7 +37,7 @@ helpgate [--bin path] [--readme path] [--cwd dir] [--allow flag] [--strict-scrip
 
 | Code | Meaning |
 | --- | --- |
-| `0` | Flags aligned (script mismatches are warnings unless `--strict-scripts`) |
+| `0` | Flags aligned (script mismatches are warnings unless `--strict-scripts`), or `--exit-zero` |
 | `1` | Flag drift, strict script mismatch, or a fatal error (missing bin / README / help output) |
 
 ### What it checks

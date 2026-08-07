@@ -10,6 +10,8 @@ export interface CliOptions {
   strictScripts: boolean;
   /** Silent on success; only print when drift / failure. */
   quiet: boolean;
+  /** Always exit 0 after reporting (advisory / gradual CI adoption). */
+  exitZero: boolean;
   json: boolean;
   help: boolean;
   version: boolean;
