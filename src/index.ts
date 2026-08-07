@@ -19,6 +19,7 @@ export function buildReport(opts: {
   readmeText: string;
   allow?: string[];
   strictScripts?: boolean;
+  noScripts?: boolean;
 }): DriftReport {
   const help = extractFlagsFromHelp(opts.helpText);
   const readme = extractFlagsFromReadme(opts.readmeText);
@@ -41,7 +42,7 @@ export function buildReport(opts: {
     return true;
   });
 
-  const scripts = checkScripts(opts.readmeText, opts.cwd);
+  const scripts = opts.noScripts ? null : checkScripts(opts.readmeText, opts.cwd);
   const warnings: string[] = [];
 
   if (scripts && scripts.missingInPackage.length > 0) {
@@ -169,6 +170,7 @@ export async function run(argv: string[]): Promise<number> {
     readmeText,
     allow: options.allow,
     strictScripts: options.strictScripts,
+    noScripts: options.noScripts,
   });
 
   if (options.json) {

@@ -82,4 +82,26 @@ if (self.status !== 0) {
 }
 console.log("✓ helpgate self-check exits 0");
 
+const noScripts = run(["--cwd", "fixtures/demo-cli", "--no-scripts", "--json"]);
+if (noScripts.status !== 1) {
+  console.error("Expected --no-scripts drift fixture to exit 1 (flags), got", noScripts.status);
+  process.exit(1);
+}
+let noScriptsReport;
+try {
+  noScriptsReport = JSON.parse(noScripts.stdout);
+} catch {
+  console.error("Expected JSON report from --no-scripts");
+  process.exit(1);
+}
+if (noScriptsReport.scripts !== null) {
+  console.error("Expected scripts=null with --no-scripts, got", noScriptsReport.scripts);
+  process.exit(1);
+}
+if (noScriptsReport.warnings.length > 0) {
+  console.error("Expected no script warnings with --no-scripts");
+  process.exit(1);
+}
+console.log("✓ fixtures/demo-cli --no-scripts skips script checks");
+
 console.log("All fixture checks passed.");

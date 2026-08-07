@@ -12,6 +12,8 @@ export interface CliOptions {
   quiet: boolean;
   /** Always exit 0 after reporting (advisory / gradual CI adoption). */
   exitZero: boolean;
+  /** Skip README script cross-check; flags-only mode. */
+  noScripts: boolean;
   json: boolean;
   help: boolean;
   version: boolean;
