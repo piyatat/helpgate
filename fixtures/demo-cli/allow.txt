@@ -1,0 +1,4 @@
+# Known doc-only flags
+--debug
+format
+--output

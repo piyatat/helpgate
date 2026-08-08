@@ -17,7 +17,7 @@ Requires **Node.js >= 18**. Zero runtime dependencies.
 ## Usage
 
 ```bash
-helpgate [--bin path] [--help-cmd arg…] [--readme path] [--cwd dir] [--allow flag] [--ignore-meta] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
+helpgate [--bin path] [--help-cmd arg…] [--readme path] [--cwd dir] [--allow flag] [--allow-file path] [--ignore-meta] [--strict-scripts] [--no-scripts] [--quiet] [--summary] [--exit-zero] [--json]
 ```
 
 | Flag | Description |
@@ -27,6 +27,7 @@ helpgate [--bin path] [--help-cmd arg…] [--readme path] [--cwd dir] [--allow f
 | `--readme <path>` | Markdown to scan (default: `README.md`) |
 | `--cwd <dir>` | Resolve package / README relative to this directory (default: `.`) |
 | `--allow <flag>` | Ignore a flag in drift checks (repeatable; bare names are accepted) |
+| `--allow-file <path>` | Read allow flags from a file (one per line; `#` comments ok) |
 | `--ignore-meta` | Auto-ignore `--help`, `--version`, `-h`, `-V` (common CLI boilerplate) |
 | `--strict-scripts` | Fail when README mentions `npm run` scripts missing from `package.json` |
 | `--no-scripts` | Skip README script cross-check (flags-only mode) |

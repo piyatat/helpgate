@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { extractFlagsFromHelp, resolvePackageBin, runHelp } from "./help.js";
-import { getVersion, parseArgs, printOwnHelp } from "./parse-args.js";
+import { getVersion, normalizeAllowFlag, parseArgs, printOwnHelp } from "./parse-args.js";
 import { diffFlags, extractFlagsFromReadme } from "./readme.js";
 import { checkScripts } from "./scripts.js";
 import type { DriftReport } from "./types.js";
@@ -182,13 +182,36 @@ export async function run(argv: string[]): Promise<number> {
   }
 
   const readmeText = fs.readFileSync(readmePath, "utf8");
+
+  let allow = [...options.allow];
+  if (options.allowFile) {
+    const allowPath = path.isAbsolute(options.allowFile)
+      ? options.allowFile
+      : path.resolve(cwd, options.allowFile);
+    if (!fs.existsSync(allowPath)) {
+      console.error(`helpgate: allow file not found: ${allowPath}`);
+      return 1;
+    }
+    const lines = fs.readFileSync(allowPath, "utf8").split(/\r?\n/);
+    for (const line of lines) {
+      const trimmed = line.replace(/#.*$/, "").trim();
+      if (!trimmed) continue;
+      const normalized = normalizeAllowFlag(trimmed);
+      if (!normalized) {
+        console.error(`helpgate: invalid allow flag in ${allowPath}: ${trimmed}`);
+        return 1;
+      }
+      allow.push(normalized);
+    }
+  }
+
   const report = buildReport({
     cwd,
     bin: binRel,
     readmePath,
     helpText: helpResult.text,
     readmeText,
-    allow: options.allow,
+    allow,
     strictScripts: options.strictScripts,
     noScripts: options.noScripts,
     ignoreMeta: options.ignoreMeta,

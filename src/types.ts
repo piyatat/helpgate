@@ -8,6 +8,8 @@ export interface CliOptions {
   cwd: string;
   /** Flags excluded from drift (repeatable `--allow`). */
   allow: string[];
+  /** Optional file with one flag per line (merged into allow). */
+  allowFile?: string;
   /** When true, package-script mismatches fail the gate (not warnings). */
   strictScripts: boolean;
   /** Silent on success; only print when drift / failure. */

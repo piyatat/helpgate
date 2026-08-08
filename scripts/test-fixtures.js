@@ -151,4 +151,26 @@ if (!ignoreMeta.stdout.includes("Allowed") || !ignoreMeta.stdout.includes("--hel
 }
 console.log("✓ fixtures/demo-cli --ignore-meta skips meta flag drift");
 
+const allowFile = run([
+  "--cwd",
+  "fixtures/demo-cli",
+  "--allow-file",
+  "allow.txt",
+  "--ignore-meta",
+  "--allow",
+  "--quiet",
+]);
+if (allowFile.status !== 0) {
+  console.error("Expected --allow-file to exit 0, got", allowFile.status);
+  console.error(allowFile.stdout);
+  console.error(allowFile.stderr);
+  process.exit(1);
+}
+if (!allowFile.stdout.includes("--debug") || !allowFile.stdout.includes("Allowed")) {
+  console.error("Expected --allow-file flags in allowed list");
+  console.error(allowFile.stdout);
+  process.exit(1);
+}
+console.log("✓ fixtures/demo-cli --allow-file reads flags from file");
+
 console.log("All fixture checks passed.");
